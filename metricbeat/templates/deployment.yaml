@@ -50,11 +50,21 @@ spec:
         configMap:
           defaultMode: 0600
           name: {{ template "metricbeat.fullname" . }}-config
+          items:
+          {{- range $path, $config := .Values.metricbeatConfig }}
+            - key: {{ $path }}
+              path: {{ $path }}
+          {{- end }}
       {{- else if .Values.deployment.metricbeatConfig }}
       - name: metricbeat-config
         configMap:
           defaultMode: 0600
           name: {{ template "metricbeat.fullname" . }}-deployment-config
+          items:
+          {{- range $path, $config := .Values.deployment.metricbeatConfig }}
+            - key: {{ $path }}
+              path: {{ $path }}
+          {{- end }}
       {{- end }}
       {{- if .Values.extraVolumes | default .Values.deployment.extraVolumes }}
 {{ toYaml ( .Values.extraVolumes | default .Values.deployment.extraVolumes ) | indent 6 }}
@@ -100,18 +110,10 @@ spec:
           subPath: {{ .subPath }}
           {{- end }}
         {{- end }}
-        {{- range $path, $config := .Values.metricbeatConfig }}
+        {{- if or .Values.metricbeatConfig  .Values.deployment.metricbeatConfig }}
         - name: metricbeat-config
-          mountPath: /usr/share/metricbeat/{{ $path }}
+          mountPath: /usr/share/metricbeat/
           readOnly: true
-          subPath: {{ $path }}
-        {{ else }}
-        {{- range $path, $config := .Values.deployment.metricbeatConfig }}
-        - name: metricbeat-config
-          mountPath: /usr/share/metricbeat/{{ $path }}
-          readOnly: true
-          subPath: {{ $path }}
-        {{- end }}
         {{- end }}
         {{- if .Values.extraVolumeMounts | default .Values.deployment.extraVolumeMounts }}
 {{ toYaml ( .Values.extraVolumeMounts | default .Values.deployment.extraVolumeMounts ) | indent 8 }}
