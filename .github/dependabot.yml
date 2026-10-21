@@ -1,0 +1,60 @@
+version: 2
+updates:
+  - package-ecosystem: docker
+    directories:
+    - /helpers/helm-tester
+    - /helpers/terraform
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      routine-updates:
+        patterns:
+        - '*'
+        update-types:
+        - minor
+        - patch
+  - package-ecosystem: helm
+    directories:
+    - /apm-server
+    - /elasticsearch
+    - /filebeat
+    - /kibana
+    - /logstash
+    - /metricbeat
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      routine-updates:
+        patterns:
+        - '*'
+        update-types:
+        - minor
+        - patch
+  - package-ecosystem: pip
+    directories:
+    - /
+    - /helpers/helm-tester
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      routine-updates:
+        patterns:
+        - '*'
+        update-types:
+        - minor
+        - patch
+  - package-ecosystem: terraform
+    directory: /helpers/terraform
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      routine-updates:
+        patterns:
+        - '*'
+        update-types:
+        - minor
+        - patch
